@@ -93,6 +93,14 @@ async function scanInstructions(dir: string, items: DiscoveredItem[]): Promise<v
         sourcePath: join(dir, entry),
         extension: '.instructions.md',
       });
+    } else if (entry.endsWith('.md')) {
+      // Also support plain .md files (e.g., commands/*.md)
+      items.push({
+        type: 'instruction',
+        name: entry.replace(/\.md$/, ''),
+        sourcePath: join(dir, entry),
+        extension: '.md',
+      });
     }
   }
 }
@@ -116,17 +124,32 @@ async function scanSkills(dir: string, items: DiscoveredItem[]): Promise<void> {
 
 async function scanRules(dir: string, items: DiscoveredItem[]): Promise<void> {
   if (!(await exists(dir))) return;
-  const entries = await readdir(dir);
-  for (const entry of entries) {
-    if (entry.endsWith('.rules.md')) {
-      items.push({
-        type: 'rule',
-        name: entry.replace(/\.rules\.md$/, ''),
-        sourcePath: join(dir, entry),
-        extension: '.rules.md',
-      });
+
+  async function scanRecursive(currentDir: string, prefix: string = ''): Promise<void> {
+    const entries = await readdir(currentDir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const fullPath = join(currentDir, entry.name);
+
+      if (entry.isDirectory()) {
+        await scanRecursive(fullPath, prefix + entry.name + '/');
+      } else if (entry.isFile() && entry.name.endsWith('.md')) {
+        // Skip README files
+        if (entry.name.toLowerCase() === 'readme.md') continue;
+        // Strip .rules.md suffix first, then any remaining .md
+        const baseName = entry.name.replace(/\.rules\.md$/, '').replace(/\.md$/, '');
+        const name = prefix + baseName;
+        items.push({
+          type: 'rule',
+          name,
+          sourcePath: fullPath,
+          extension: '.md',
+        });
+      }
     }
   }
+
+  await scanRecursive(dir);
 }
 
 async function scanPlugins(dir: string, items: DiscoveredItem[]): Promise<void> {

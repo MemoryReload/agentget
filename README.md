@@ -136,8 +136,6 @@ For repos with non-standard structure, specify custom directory names:
 | `--instructions-dir <name>` | `instructions` | `--instructions-dir docs` |
 | `--rules-dir <name>`        | `rules`        | `--rules-dir policies`    |
 
-**Note:** Agents directory scanning is **recursive** — finds `.md` and `.agent.md` files in all subdirectories.
-
 ## Frontmatter Handling
 
 YAML frontmatter (content between `---` delimiters at the start of files) is **automatically stripped** during installation. This ensures compatibility with tools that don't support frontmatter or have different frontmatter requirements.
@@ -163,13 +161,15 @@ You are a UI designer...
 
 Content is discovered from these patterns in the target repo:
 
-| Type         | Pattern                             |
-| ------------ | ----------------------------------- |
-| Agents       | `agents/*.agent.md`                 |
-| Instructions | `instructions/*.instructions.md`    |
-| Skills       | `skills/*/SKILL.md` (whole folder)  |
-| Rules        | `rules/*.rules.md`                  |
-| Plugins      | `plugins/*/` (expanded recursively) |
+| Type         | Pattern                                                           |
+| ------------ | ---------------------------------------------------------------- |
+| Agents       | `agents/**/*.agent.md` or `agents/**/*.md` (recursive)           |
+| Instructions | `instructions/*.instructions.md` or `instructions/*.md`            |
+| Skills       | `skills/*/SKILL.md` (whole folder)                               |
+| Rules        | `rules/*.rules.md` or `rules/**/*.md` (recursive, excludes README)|
+| Plugins      | `plugins/*/` (expanded recursively)                               |
+
+**Note:** Agent and rule scanning are recursive — finds files in all subdirectories.
 
 ## Where files go
 

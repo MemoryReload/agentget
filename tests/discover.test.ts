@@ -105,4 +105,32 @@ describe('discoverContent', () => {
       expect.objectContaining({ type: 'agent', name: 'foo', extension: '.agent.md' })
     );
   });
+
+  it('rules/ nested subdir with rules/common/coding-style.md', async () => {
+    await mkdir(join(tempDir, 'rules', 'common'), { recursive: true });
+    await writeFile(join(tempDir, 'rules', 'common', 'coding-style.md'), 'content');
+    const result = await discoverContent(tempDir);
+    expect(result).toContainEqual(
+      expect.objectContaining({ type: 'rule', name: 'common/coding-style' })
+    );
+  });
+
+  it('rules/ skips README.md', async () => {
+    await mkdir(join(tempDir, 'rules'));
+    await writeFile(join(tempDir, 'rules', 'README.md'), 'content');
+    await writeFile(join(tempDir, 'rules', 'actual-rule.md'), 'content');
+    const result = await discoverContent(tempDir);
+    expect(result).toContainEqual(expect.objectContaining({ type: 'rule', name: 'actual-rule' }));
+    expect(result).not.toContainEqual(expect.objectContaining({ name: 'README' }));
+  });
+
+  it('instructions/ with plain .md file', async () => {
+    await mkdir(join(tempDir, 'instructions'));
+    await writeFile(join(tempDir, 'instructions', 'plan.md'), 'content');
+    const result = await discoverContent(tempDir);
+    expect(result).toContainEqual(
+      expect.objectContaining({ type: 'instruction', name: 'plan', extension: '.md' })
+    );
+  });
+
 });

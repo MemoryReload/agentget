@@ -94,7 +94,7 @@ async function scanInstructions(dir: string, items: DiscoveredItem[]): Promise<v
         extension: '.instructions.md',
       });
     } else if (entry.endsWith('.md')) {
-      // Also support plain .md files (e.g., commands/*.md)
+      // Also support plain .md files in instructions/
       items.push({
         type: 'instruction',
         name: entry.replace(/\.md$/, ''),

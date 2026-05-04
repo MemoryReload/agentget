@@ -132,5 +132,4 @@ describe('discoverContent', () => {
       expect.objectContaining({ type: 'instruction', name: 'plan', extension: '.md' })
     );
   });
-
 });

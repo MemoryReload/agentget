@@ -16,6 +16,10 @@ export interface ListRemoteOptions {
   skillsOnly?: boolean;
   instructionsOnly?: boolean;
   rulesOnly?: boolean;
+  agentsDir?: string;
+  skillsDir?: string;
+  instructionsDir?: string;
+  rulesDir?: string;
 }
 
 export async function listRemote(source: string, options: ListRemoteOptions = {}): Promise<void> {
@@ -26,7 +30,12 @@ export async function listRemote(source: string, options: ListRemoteOptions = {}
 
   try {
     console.log(`Discovering content...`);
-    let items = await discoverContent(dir, parsed.subpath);
+    let items = await discoverContent(dir, parsed.subpath, {
+      agentsDir: options.agentsDir,
+      skillsDir: options.skillsDir,
+      instructionsDir: options.instructionsDir,
+      rulesDir: options.rulesDir,
+    });
 
     // Determine which content types to include
     const includeTypes = new Set<string>();

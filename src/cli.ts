@@ -105,6 +105,13 @@ program
   .option('--skills-only', 'List only skills')
   .option('--instructions-only', 'List only instructions')
   .option('--rules-only', 'List only rules')
+  .option('--agents-dir <name>', 'Alternative directory name for agents (default: "agents")')
+  .option('--skills-dir <name>', 'Alternative directory name for skills (default: "skills")')
+  .option(
+    '--instructions-dir <name>',
+    'Alternative directory name for instructions (default: "instructions")'
+  )
+  .option('--rules-dir <name>', 'Alternative directory name for rules (default: "rules")')
   .action(
     async (
       source: string,
@@ -114,6 +121,10 @@ program
         skillsOnly?: boolean;
         instructionsOnly?: boolean;
         rulesOnly?: boolean;
+        agentsDir?: string;
+        skillsDir?: string;
+        instructionsDir?: string;
+        rulesDir?: string;
       }
     ) => {
       try {
@@ -123,6 +134,10 @@ program
           skillsOnly: options.skillsOnly,
           instructionsOnly: options.instructionsOnly,
           rulesOnly: options.rulesOnly,
+          agentsDir: options.agentsDir,
+          skillsDir: options.skillsDir,
+          instructionsDir: options.instructionsDir,
+          rulesDir: options.rulesDir,
         });
       } catch (err) {
         console.error(`Error: ${(err as Error).message}`);

@@ -110,6 +110,9 @@ npx agentget remote owner/repo --instructions-only
 
 # List only rules
 npx agentget remote owner/repo --rules-only
+
+# Use custom directory names for repos with non-standard structure
+npx agentget remote owner/repo --instructions-dir commands --rules-dir policies
 ```
 
 ## Filtering
@@ -127,7 +130,7 @@ npx agentget remote owner/repo --rules-only
 
 ## Alternative Directory Names
 
-For repos with non-standard structure, specify custom directory names:
+For repos with non-standard structure, specify custom directory names. Works with both `add` and `remote` commands:
 
 | Flag                        | Default        | Usage                     |
 | --------------------------- | -------------- | ------------------------- |
